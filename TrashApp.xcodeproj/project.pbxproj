@@ -13,6 +13,7 @@
 		1163ED47259CFB090062C039 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1163ED46259CFB090062C039 /* Preview Assets.xcassets */; };
 		1163ED52259CFB090062C039 /* TrashAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1163ED51259CFB090062C039 /* TrashAppTests.swift */; };
 		1163ED5D259CFB090062C039 /* TrashAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1163ED5C259CFB090062C039 /* TrashAppUITests.swift */; };
+		1163ED6E259D45A20062C039 /* SimpleWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1163ED6D259D45A20062C039 /* SimpleWebView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +46,7 @@
 		1163ED58259CFB090062C039 /* TrashAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrashAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1163ED5C259CFB090062C039 /* TrashAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashAppUITests.swift; sourceTree = "<group>"; };
 		1163ED5E259CFB090062C039 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1163ED6D259D45A20062C039 /* SimpleWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleWebView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +102,7 @@
 				1163ED43259CFB090062C039 /* Assets.xcassets */,
 				1163ED48259CFB090062C039 /* Info.plist */,
 				1163ED45259CFB090062C039 /* Preview Content */,
+				1163ED6D259D45A20062C039 /* SimpleWebView.swift */,
 			);
 			path = TrashApp;
 			sourceTree = "<group>";
@@ -259,6 +262,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1163ED6E259D45A20062C039 /* SimpleWebView.swift in Sources */,
 				1163ED42259CFB030062C039 /* ContentView.swift in Sources */,
 				1163ED40259CFB030062C039 /* TrashAppApp.swift in Sources */,
 			);
