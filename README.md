@@ -2,6 +2,19 @@
 
 This repo is a journal of me learning how SwiftUI, Swift, and WKWebKit works together. My goal is to build out a very flexible MIT licenses SwiftUI `WebView` component that makes building hybrid web/native apps a really easy thing to do with SwiftUI and minimal coding. The format of this particular repo is a journal.
 
+## January 1, 2021
+
+I copied example from yesterday and built out a callback for navigating. Now I can add this to a block in the code:
+
+```swift
+.onNavigationChanged { navigationAction, decisionHandler in
+    self.title = navigationAction.request.url?.absoluteString ?? "Har har har"
+    decisionHandler(.cancel)
+}
+```
+
+and control the navigation behavior from SwiftUI. I still need to play around with some of the lifecycle around WKWebKit and SwiftUI state, but this is a good start.
+
 ## December 31, 2020
 
 https://developer.apple.com/forums/thread/126986 is headed down the right path of what I'm looking for in terms of not allowing WKWebView to manage the history and navigation of links. This will make it possible to put a `WebView` in a `NavigationView` to handle history, etc. What I need to figure out is how to intercept the URL, HTTP response object, etc. in the callback so I can do certain actions like load PDFs into a PDF viewer instead of the WKWebKit view. For now, I'm going to call this the `SwankyWebView`.

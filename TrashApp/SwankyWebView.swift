@@ -5,10 +5,15 @@ import WebKit
 
 struct SwankyWebView: UIViewRepresentable {
     @Binding var title: String
+    @State var didFinishLoading = false
+    
     var url: URL
     var loadStatusChanged: ((Bool, Error?) -> Void)? = nil
+    var navigationChanged: ((WKNavigationAction, (WKNavigationActionPolicy) -> Void) -> Void)? = nil
 
-    func makeCoordinator() -> SwankyWebView.Coordinator {
+    var navigationAction = WKNavigationActionPolicy.allow
+
+    func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
 
@@ -24,14 +29,20 @@ struct SwankyWebView: UIViewRepresentable {
         // Note that this method will be called A LOT
     }
 
-    func onLoadStatusChanged(perform: ((Bool, Error?) -> Void)?) -> some View {
+    func onLoadStatusChanged(perform: ((Bool, Error?) -> Void)?) -> SwankyWebView {
         var copy = self
         copy.loadStatusChanged = perform
         return copy
     }
-
+    
+    func onNavigationChanged(perform: ((WKNavigationAction, (WKNavigationActionPolicy) -> Void) -> Void)?) -> SwankyWebView {
+        var copy = self
+        copy.navigationChanged = perform
+        return copy
+    }
+    
     class Coordinator: NSObject, WKNavigationDelegate {
-        let parent: SwankyWebView
+        var parent: SwankyWebView
 
         init(_ parent: SwankyWebView) {
             self.parent = parent
@@ -44,10 +55,20 @@ struct SwankyWebView: UIViewRepresentable {
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             parent.title = webView.title ?? ""
             parent.loadStatusChanged?(false, nil)
+            parent.didFinishLoading = true
         }
 
         func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
             parent.loadStatusChanged?(false, error)
+            parent.didFinishLoading = true
+        }
+        
+        func webView(_ webView: WKWebView, decidePolicyFor: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
+            if parent.didFinishLoading {
+                parent.navigationChanged?(decidePolicyFor, decisionHandler)
+            } else {
+                decisionHandler(.allow)
+            }
         }
     }
 }
