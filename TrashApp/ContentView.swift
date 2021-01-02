@@ -14,28 +14,30 @@ struct ContentView: View {
 
     var body: some View {
         NavigationView {
-            SwankyWebView(title: $title, url: URL(string: "https://www.apple.com/")!)
-                .onNavigationChanged { navigationAction, decisionHandler in
-                    self.title = navigationAction.request.url?.absoluteString ?? "Har har har"
-                    decisionHandler(.cancel)
-                }
-                .onLoadStatusChanged { loading, error in
-                    if loading {
-                        print("Loading started")
-                        self.title = "Loading…"
+            VStack{
+                SwankyWebView(title: $title, url: "https://www.apple.com/")
+                    .onNavigationChanged { navigationAction, decisionHandler in
+                        self.title = navigationAction.request.url?.absoluteString ?? "Har har har"
+                        decisionHandler(.cancel)
                     }
-                    else {
-                        print("Done loading.")
-                        if let error = error {
-                            self.error = error
-                            if self.title.isEmpty {
-                                self.title = "Error"
+                    .onLoadStatusChanged { loading, error in
+                        if loading {
+                            print("Loading started")
+                            self.title = "Loading…"
+                        }
+                        else {
+                            print("Done loading.")
+                            if let error = error {
+                                self.error = error
+                                if self.title.isEmpty {
+                                    self.title = "Error"
+                                }
+                            }
+                            else if self.title.isEmpty {
+                                self.title = "Some Place"
                             }
                         }
-                        else if self.title.isEmpty {
-                            self.title = "Some Place"
-                        }
-                    }
+                }
             }
             .navigationBarTitle(title)
         }
@@ -45,16 +47,5 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-    }
-}
-
-struct WebView: View {
-    @State var url: String
-
-    var body: some View {
-        SimpleWebView(url: self.url)
-        NavigationLink(destination: WebView(url: "https://www.yahoo.com/")) {
-            Text("Load next page")
-        }.navigationBarTitle("Navigation")
     }
 }

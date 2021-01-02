@@ -6,12 +6,10 @@ import WebKit
 struct SwankyWebView: UIViewRepresentable {
     @Binding var title: String
     @State var didFinishLoading = false
+    var url: String
     
-    var url: URL
     var loadStatusChanged: ((Bool, Error?) -> Void)? = nil
     var navigationChanged: ((WKNavigationAction, (WKNavigationActionPolicy) -> Void) -> Void)? = nil
-
-    var navigationAction = WKNavigationActionPolicy.allow
 
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -20,7 +18,7 @@ struct SwankyWebView: UIViewRepresentable {
     func makeUIView(context: Context) -> WKWebView {
         let view = WKWebView()
         view.navigationDelegate = context.coordinator
-        view.load(URLRequest(url: url))
+        view.load(URLRequest(url: URL(string: url)!))
         return view
     }
 
@@ -64,8 +62,10 @@ struct SwankyWebView: UIViewRepresentable {
         }
         
         func webView(_ webView: WKWebView, decidePolicyFor: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
+            guard let navigationChanged = parent.navigationChanged else { return decisionHandler(.allow) }
+            
             if parent.didFinishLoading {
-                parent.navigationChanged?(decidePolicyFor, decisionHandler)
+                navigationChanged(decidePolicyFor, decisionHandler)
             } else {
                 decisionHandler(.allow)
             }
@@ -79,7 +79,7 @@ struct Display: View {
 
     var body: some View {
         NavigationView {
-            SwankyWebView(title: $title, url: URL(string: "https://www.apple.com/")!)
+            SwankyWebView(title: $title, url: "https://www.apple.com/")
                 .onLoadStatusChanged { loading, error in
                     if loading {
                         print("Loading started")
