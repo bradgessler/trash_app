@@ -32,13 +32,13 @@ struct SwankyWebView: UIViewRepresentable {
         copy.loadStatusChanged = perform
         return copy
     }
-    
+
     func onNavigationChanged(perform: ((WKNavigationAction, (WKNavigationActionPolicy) -> Void) -> Void)?) -> SwankyWebView {
         var copy = self
         copy.navigationChanged = perform
         return copy
     }
-    
+
     class Coordinator: NSObject, WKNavigationDelegate {
         var parent: SwankyWebView
 
@@ -60,7 +60,7 @@ struct SwankyWebView: UIViewRepresentable {
             parent.loadStatusChanged?(false, error)
             parent.didFinishLoading = true
         }
-        
+
         func webView(_ webView: WKWebView, decidePolicyFor: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
             guard let navigationChanged = parent.navigationChanged else { return decisionHandler(.allow) }
             

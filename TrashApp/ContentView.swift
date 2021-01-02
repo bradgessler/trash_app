@@ -9,38 +9,35 @@ import SwiftUI
 import WebKit
 
 struct ContentView: View {
-    @State var title: String = ""
-    @State var error: Error? = nil
-
+    @State var url: String = "https://legiblenews.com/"
+    
     var body: some View {
         NavigationView {
-            VStack{
-                SwankyWebView(title: $title, url: "https://www.apple.com/")
-                    .onNavigationChanged { navigationAction, decisionHandler in
-                        self.title = navigationAction.request.url?.absoluteString ?? "Har har har"
-                        decisionHandler(.cancel)
-                    }
-                    .onLoadStatusChanged { loading, error in
-                        if loading {
-                            print("Loading started")
-                            self.title = "Loading…"
-                        }
-                        else {
-                            print("Done loading.")
-                            if let error = error {
-                                self.error = error
-                                if self.title.isEmpty {
-                                    self.title = "Error"
-                                }
-                            }
-                            else if self.title.isEmpty {
-                                self.title = "Some Place"
-                            }
-                        }
-                }
-            }
-            .navigationBarTitle(title)
+            WebViewSheet(url: $url)
         }
+    }
+}
+
+struct WebViewSheet: View {
+    @State var title: String = ""
+    @Binding var url: String
+
+    @State var error: Error? = nil
+    @State private var hasNavigated = false
+    
+    func handleNavigation(_ action: WKNavigationAction, _ decision: (WKNavigationActionPolicy) -> Void) -> Void {
+        self.url = action.request.url!.absoluteString
+        self.hasNavigated = true
+        decision(.cancel)
+    }
+    
+    var body: some View {
+        VStack {
+            NavigationLink(destination: WebViewSheet(url: $url), isActive: $hasNavigated) { EmptyView() }
+            SwankyWebView(title: $title, url: self.url, navigationChanged: handleNavigation)
+        }
+        .navigationBarTitle(title, displayMode: .inline)
+
     }
 }
 
